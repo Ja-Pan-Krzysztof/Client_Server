@@ -5,7 +5,7 @@ class Client:
     HOST = '192.168.0.101'
     PORT = 9999
     FORMAT = 'utf8'
-    HEADER = 64
+    HEADER = 8
 
     def __init__(self):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -18,7 +18,7 @@ class Client:
 
             if message == '!stop'.encode(self.FORMAT):
                 head_message = str(20).encode(self.FORMAT)
-                message = 'User was disconected'.encode(self.FORMAT)
+                message = '!stop'.encode(self.FORMAT)
 
                 self.sock.send(head_message)
                 self.sock.send(message)
@@ -35,7 +35,8 @@ class Client:
     def receive(self):
         while True:
             try:
-                message = self.sock.recv(self.HEADER).decode(self.FORMAT)
+                head_message = self.sock.recv(self.HEADER).decode(self.FORMAT)
+                message = self.sock.recv(int(head_message)).decode(self.FORMAT)
                 print(message)
                 self.write()
 

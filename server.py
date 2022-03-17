@@ -1,5 +1,5 @@
 from socket import socket, AF_INET, SOCK_STREAM
-from threading import Thread, current_thread
+from threading import Thread
 import logging
 
 logging.basicConfig(level=logging.INFO, format='[%(levelname)s] [%(name)s] - %(message)s')
@@ -26,7 +26,7 @@ class Server:
                 message = client.recv(int(head_message)).decode(self.FORMAT)
 
                 if message == '!stop':
-                    print(message)
+                    logging.info('User was disconected')
                     break
 
                 else:
@@ -39,7 +39,9 @@ class Server:
         while True:
             client, address = self.sock.accept()
 
-            logging.info(f'Connected with {address[0]}:{[address[1]]}.')
+            logging.info(f'Connected with {address[0]}:{[address[1]]}')
+
+            client.send('26'.encode(self.FORMAT))
             client.send('Welcome to the my server !'.encode(self.FORMAT))
 
             tasks = Thread(target=self.handle_client_connection, args=(client, ))
