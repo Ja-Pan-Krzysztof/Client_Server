@@ -20,10 +20,20 @@ class Server:
         print('Server is running...')
 
     def handle_client_connection(self, client):
-        head_message = client.recv(self.HEADER).decode(self.FORMAT)
-        message = client.recv(int(head_message)).decode(self.FORMAT)
+        while True:
+            try:
+                head_message = client.recv(self.HEADER).decode(self.FORMAT)
+                message = client.recv(int(head_message)).decode(self.FORMAT)
 
-        print(message)
+                if message == '!stop':
+                    print(message)
+                    break
+
+                else:
+                    print(message)
+
+            except ValueError:
+                break
 
     def receive(self):
         while True:
